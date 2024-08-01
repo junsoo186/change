@@ -1,0 +1,11 @@
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/footer.css">
+<div class="footer">
+        <p>© 2022 Github-University. School opened.</p>
+        <p>
+            <a href="#https://github.com/">Github</a> |
+            <a href="#https://github.com/dbstjlee/group3_july_team_project">Team3</a> |
+            <a href="#">Project</a>
+        </p>
+    </div>
+</body>
+</html>

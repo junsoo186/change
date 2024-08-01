@@ -1,0 +1,8 @@
+127.0.0.1 - - [19/Jul/2024:09:04:31 +0900] "GET / HTTP/1.1" 404 808
+0:0:0:0:0:0:0:1 - - [19/Jul/2024:09:04:32 +0900] "GET /goup4_july_team_project/WEB-INF/classes/com/tenco/group3/repository/SubjectRepositoryImpl.java HTTP/1.1" 404 722
+0:0:0:0:0:0:0:1 - - [19/Jul/2024:09:04:32 +0900] "GET /favicon.ico HTTP/1.1" 404 819
+127.0.0.1 - - [19/Jul/2024:11:23:39 +0900] "GET / HTTP/1.1" 404 808
+0:0:0:0:0:0:0:1 - - [19/Jul/2024:11:23:39 +0900] "GET /goup4_july_team_project/WEB-INF/classes/com/tenco/group3/repository/SubjectRepositoryImpl.java HTTP/1.1" 404 722
+0:0:0:0:0:0:0:1 - - [19/Jul/2024:11:23:39 +0900] "GET /favicon.ico HTTP/1.1" 404 819
+0:0:0:0:0:0:0:1 - - [19/Jul/2024:11:23:56 +0900] "GET /goup4_july_team_project/management HTTP/1.1" 302 -
+0:0:0:0:0:0:0:1 - - [19/Jul/2024:11:23:56 +0900] "GET /goup4_july_team_project/main/login HTTP/1.1" 404 850

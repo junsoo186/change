@@ -1,0 +1,202 @@
+package com.tenco.controller;
+
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.security.Principal;
+import java.util.List;
+
+import com.tenco.model.TodoDAO;
+import com.tenco.model.TodoDAOImpl;
+import com.tenco.model.TodoDTO;
+import com.tenco.model.UserDTO;
+
+// .../mvc/todo/xxx
+@WebServlet("/todo/*")
+public class TodoController extends HttpServlet {
+	private static final long serialVersionUID = 1L;
+	private TodoDAO todoDAO;
+	
+    public TodoController() {
+        todoDAO=new TodoDAOImpl();
+    }
+
+    // http://localhost:8080/mvc/todo/todoForm
+    // http://localhost:8080/mvc/todo/form
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		HttpSession session=request.getSession();
+		UserDTO principal=(UserDTO)session.getAttribute("principal");
+		String action = request.getPathInfo();
+		System.out.println("action : "+action);
+		switch (action) {
+		case "/todoForm": {
+			todoFormPage(request,response);
+			break;
+		}
+		case "/list": {
+			todoListPage(request,response,principal.getId());
+			break;
+		}
+		case "/detail": {
+			todoDatailPage(request,response,principal.getId());
+			break;
+		}
+		case "/delete ": {
+			deleteTodo(request,response,principal.getId());
+			break;
+		}
+		default:
+			response.sendError(HttpServletResponse.SC_NOT_FOUND);
+			break;
+		}
+	}
+
+	/**
+	 * todo 삭제 기능
+	 * @param request
+	 * @param response
+	 * @param principalId
+	 * @throws IOException
+	 */
+	private void deleteTodo(HttpServletRequest request, HttpServletResponse response, int principalId) throws IOException {
+		try {
+			System.out.println("여기서 오류가 발생하는 경우가 있다고?!");
+			int todoId = Integer.parseInt(request.getParameter("id"));
+			todoDAO.deleteTodo(todoId, principalId);
+		} catch (Exception e) {
+			response.sendRedirect(request.getContextPath()+"/todo/list?error=invalid");
+		}
+		response.sendRedirect(request.getContextPath()+"/todo/list");
+	}
+
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// TODO - 수정 예정
+		HttpSession session=request.getSession();
+		UserDTO principal=(UserDTO)session.getAttribute("principal");
+		String action = request.getPathInfo();
+		// principal -- null이라면 ==> 로그인 페이지 이동 처리
+		// 인증 검사
+		 if(principal==null) {
+			 // 로그인을 안 한 상태
+			 response.sendRedirect("/mvc/user/signIn?message=invalid");
+			 return;
+		 } 
+		
+		switch(action) {
+		case "/add" :
+			addTodo(response,request,principal.getId());
+			break;
+		case "/update" :
+			updateTodo(response,request,principal.getId());
+			break;
+		default:
+			response.sendError(HttpServletResponse.SC_NOT_FOUND);
+			break;
+		}
+		
+	}
+	
+	private void updateTodo(HttpServletResponse response, HttpServletRequest request, int id) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	/**
+	 * 세션별 사용자 todo 등록
+	 * @param response
+	 * @param request
+	 * @param principalId : 세션에 담겨 있는 UserId 값
+	 */
+	private void addTodo(HttpServletResponse response, HttpServletRequest request, int principalId) throws IOException {
+		String title=request.getParameter("title");
+		String description=request.getParameter("description");
+		String dueDate=request.getParameter("dueDate");
+		
+		// checkBox는 여러개의 선택 가능한 태그 :  String[] 배열로 선언했음.
+		// 이번 checkBox는 딱 하나만 사용 중.
+		// checkBox가 선택되지 않았으면 null을 반환하고, 체크되어 있다면 on으로 떨어진다. 
+		Boolean completed = "on".equalsIgnoreCase(request.getParameter("completed"));
+		// completed -> true/false가 제대로 뜰까?
+		// 테스트 코드 : System.out.println(completed);
+		TodoDTO dto=TodoDTO.builder()
+				.userId(principalId)
+				.title(title)
+				.description(description)
+				.dueDate(dueDate)
+				.completed(String.valueOf(completed))
+				.build();
+		todoDAO.addTodo(dto, principalId);
+		response.sendRedirect(request.getContextPath()+"/todo/list");
+	}
+
+	/**
+	 * todo 작성 페이지 이동
+	 * @param request
+	 * @param response
+	 * @throws ServletException
+	 */
+	private void todoFormPage(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		// 로그인 한 사용자만 접근을 허용하도록 설계
+				 request.getRequestDispatcher("/WEB-INF/views/todoForm.jsp").forward(request, response);
+	}
+	
+	// http://localhost:8080/mvc/todo/list
+	/**
+	 * 사용자별 todo 리스트 화면 이동
+	 * @param request
+	 * @param response
+	 * @param principalId
+	 * @throws ServletException
+	 * @throws IOException
+	 */
+	private void todoListPage(HttpServletRequest request, HttpServletResponse response, int principalId) throws ServletException, IOException {
+		
+		 // request.getParameter() --> URL 요청에 있어 데이터를 추출할 때
+		 // request.getPathInfo() --> URL 요청에 있어 데이터를 추출할 때
+		 // request.getAttribute() --> 뷰를 내릴 속성에 값을 담아서 뷰로 내릴 때 사용
+		 // 데이터를 담아서 던질 예정(from DB 조회)
+		 
+		 List<TodoDTO> list=todoDAO.getTodosByUserId(principalId);
+		 request.setAttribute("list", list);
+		 // todoList.jsp 페이지로 내부에서 이동 처리
+		 request.getRequestDispatcher("/WEB-INF/views/todoList.jsp").forward(request, response);
+	}
+
+	/**
+	 * 상세 보기 화면
+	 * @param request
+	 * @param response
+	 * @param principalId 
+	 * @throws IOException 
+	 */
+	// http://localhost:8080/mvc/todo/detail?id=2;
+		private void todoDatailPage(HttpServletRequest request, HttpServletResponse response, int principalId) throws IOException {
+			//detail?id=8
+			try {
+				int todoId=Integer.parseInt(request.getParameter("id"));
+				// todo - pk - 1, 3, 5 는 야스오가 작성.
+				// todo - pk - 2, 4, 6 은 홍길동이 작성.
+				TodoDTO dto=todoDAO.getTodoById(todoId);
+				// dto - userId
+				// 세션에서 정보를 긁어, userId와 비교해볼 수 있다.
+				if(dto.getUserId()==principalId) {
+					// 상세보기 화면으로 이동 처리
+					request.setAttribute("todo", dto);
+					request.getRequestDispatcher("/WEB-INF/views/todoDetail.jsp").forward(request, response);
+				} else {
+					response.setContentType("text/html; cahrset=UTF-8");
+					PrintWriter out = response.getWriter();
+					out.println("<script> alert('권한이 없습니다');</script>");
+				}
+			} catch (Exception e) {
+				response.sendRedirect(request.getContextPath()+"/todo/list?error=invalid");
+			}
+		}
+
+}

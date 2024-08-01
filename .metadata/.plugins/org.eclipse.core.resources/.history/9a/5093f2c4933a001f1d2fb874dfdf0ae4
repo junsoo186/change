@@ -1,0 +1,36 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<link href="style.css" rel="stylesheet" type="text/css">
+<meta charset="UTF-8">
+<title>AD HEADER</title>
+<style type="text/css">
+.imgdown {
+	margin-top:
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+	<header class= "header">
+			<img src="AllDuckHead.png" class="logo">
+	</header>
+		<nav class=category>
+		
+			<ul class="login">
+				<li><a href="login.jsp">로그인</a></li>
+				<li><a href="#signup.jsp">회원가입</a></li>
+			</ul>
+		<div >
+			<ul class ="button">
+				<li><a href=""></a>홈</li>
+				<li><a href=""></a>연재 웹툰</li>
+				<li><a href=""></a>게시판</li>
+				<li><a href=""></a>랭킹</li>
+			</ul>
+		</nav>
+		</div>
+</div>
+	

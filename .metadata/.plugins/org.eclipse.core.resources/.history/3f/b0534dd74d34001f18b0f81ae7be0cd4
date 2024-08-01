@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        div{
+            width:600px;
+            height:300px;
+            border-radius:5px;
+            margin:10px;
+        }
+        .grad1{
+            /* 노란색으로 시작해서 20px까지,그 지점에서 빨간색으로 시작해서 40px까지 */
+            background:repeating-linear-gradient(to right, blue,200px,white 200px,400px, red 400px, red 600px );
+        }
+        .grad2{
+            background:repeating-linear-gradient(to right, green,200px,white 200px,400px, red 400px,red 600px );
+        }
+        .grad3{
+            border:2px solid black;
+background:repeating-radial-gradient(circle,red,red 20%,white 20%,white 100%);
+        }
+        .grad4{
+            border:2px solid black;
+background:repeating-linear-gradient(to bottom,white, 40%,red 40%, 60%,white 60%,white 100%);
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="grad1"></div>
+    <div class="grad2"></div>
+    <div class="grad3"></div>
+    <div class="grad4"></div>
+</body>
+</html>
